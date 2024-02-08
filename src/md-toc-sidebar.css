@@ -1,0 +1,176 @@
+/*Примечание:
+- Произведено переопределение отступов "body",
+  т.к. оригинальный вариант не позволял считать точкой отсчёта "top: 0";
+- Произведено переопределение размеров шрифта,
+  т.к. оригинальный вариант был рассчитан в "em",
+  что не позволяло точно вычислить смещение дополнительной панели,
+  относительно верхней границы страницы;
+- У кнопок хорошо смотрелся цвет: #204d6e.
+*/
+
+/* Переменные */
+:root {
+  --toc-sidebar-right: 26px;
+  --toc-sidebar-width: 320px;
+  --toc-sidebar-h1: 1.5rem;
+  --markdown-margin-top: 1rem;
+  --markdown-h1: 2rem;
+  --markdown-h-padding-bottom: 0.5rem;
+}
+
+/* Глобальные */
+.markdown-body h1 {
+  font-size: var(--markdown-h1);
+  scroll-margin-top: var(--markdown-h1);
+}
+
+.markdown-body h2 {
+  font-size: 1.5rem;
+  scroll-margin-top: 1.5rem;
+}
+
+.markdown-body h3 {
+  font-size: 1.25rem;
+  scroll-margin-top: 1.25rem;
+}
+
+.markdown-body h4 {
+  font-size: 1rem;
+  scroll-margin-top: 1rem;
+}
+
+.markdown-body h5 {
+  font-size: 0.85rem;
+  scroll-margin-top: 0.85rem;
+}
+
+.markdown-body h6 {
+  font-size: 0.85rem;
+  scroll-margin-top: 0.85rem;
+}
+
+a:focus {
+  outline: 0;
+}
+
+@media (max-width: 1365px) {
+  html,
+  body {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+  }
+}
+
+@media (min-width: 1366px) {
+  body {
+    padding-top: 0;
+    padding-right: 0;
+  }
+
+  .markdown-body {
+    margin-top: var(--markdown-margin-top);
+  }
+
+  .markdown-body h1 {
+    padding-bottom: 0.36rem;
+  }
+
+  :is(h2, h3, h4, h5, h6) {
+    padding-bottom: var(--markdown-h-padding-bottom);
+  }
+}
+
+/* Панель оглавления */
+.toc-sidebar-wrapper a {
+  font-size: 1rem;
+}
+
+#toc-btn-toggle-sidebar {
+  top: 0;
+  right: calc(var(--toc-sidebar-right) + 14px);
+  margin-top: calc((var(--markdown-margin-top) + var(--markdown-h1)) / 2);
+  border: 1px solid var(--vscode-widget-border);
+  border-radius: 2px;
+  background-color: var(--vscode-editorWidget-background);
+  color: var(--vscode-editorWidget-foreground);
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+@media (max-width: 1365px) {
+  .toc-sidebar-wrapper {
+    margin-top: var(--markdown-margin-top);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  #toc-btn-toggle-sidebar {
+    position: absolute;
+  }
+}
+
+@media (min-width: 1366px) {
+  .toc-sidebar-wrapper {
+    position: fixed;
+    top: 0;
+    right: var(--toc-sidebar-right);
+    width: var(--toc-sidebar-width);
+    height: auto;
+    margin-top: calc(var(--markdown-margin-top) + var(--markdown-h1) - var(--toc-sidebar-h1));
+    overflow: auto;
+  }
+
+  #toc-btn-toggle-sidebar {
+    position: fixed;
+  }
+}
+
+.toc h1 {
+  padding-bottom: var(--markdown-h-padding-bottom);
+  padding-left: 5px;
+  font-size: var(--toc-sidebar-h1);
+}
+
+.toc ul {
+  margin-bottom: 0;
+  padding-left: 10px;
+  list-style-type: none;
+}
+
+.toc > ul {
+  padding-left: 25px;
+}
+
+.toc ul li {
+  padding-left: 0;
+}
+
+.toc ul li:not(:has(ul)):before {
+  position: relative;
+  left: -8px;
+  content: "-";
+}
+
+.toc li:has(ul) {
+  list-style-type: circle;
+}
+
+.toc > p {
+  text-align: center;
+}
+
+/* Утилиты */
+.toc-sidebar-hidden {
+  display: none !important;
+}
+
+@media (min-width: 1366px) {
+  .toc-max-width-limit {
+    max-width: calc(100% - var(--toc-sidebar-width) - 25px) !important;
+  }
+
+  .toc-sm-position-absolute {
+    position: absolute !important;
+  }
+}

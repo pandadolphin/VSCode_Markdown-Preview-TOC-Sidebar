@@ -1,0 +1,64 @@
+{
+  "version": "1.0.0",
+  "license": "MIT",
+  "name": "markdown-preview-toc-sidebar",
+  "displayName": "Markdown Preview - TOC Sidebar",
+  "description": "Боковая панель с оглавлением для Markdown Preview.",
+  "publisher": "Aligotr",
+  "homepage": "https://gitflic.ru/project/aligotr/vscode_markdown-preview-toc-sidebar",
+  "bugs": {
+    "url": "https://gitflic.ru/project/aligotr/vscode_markdown-preview-toc-sidebar/issue"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitflic.ru/project/aligotr/vscode_markdown-preview-toc-sidebar"
+  },
+  "keywords": [
+    "preview",
+    "markdown",
+    "markdown-it"
+  ],
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "icon": "./assets/logo/icon.png",
+  "galleryBanner": {
+    "color": "#f5f5f5",
+    "theme": "light"
+  },
+  "engines": {
+    "vscode": "^1.86.0"
+  },
+  "contributes": {
+    "markdown.previewStyles": [
+      "./out/md-toc-sidebar.min.css"
+    ],
+    "markdown.previewScripts": [
+      "./out/md-toc-sidebar.min.js"
+    ]
+  },
+  "scripts": {
+    "build": "vsce package --baseImagesUrl https://gitflic.ru/project/aligotr/vscode_markdown-preview-toc-sidebar/",
+    "vscode:prepublish": "npm run esbuild-base",
+    "esbuild-base": "esbuild ./src/md-toc-sidebar.js --minify --sourcemap --outfile=./out/md-toc-sidebar.min.js && esbuild ./src/md-toc-sidebar.css --minify --sourcemap --outfile=./out/md-toc-sidebar.min.css",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "lint": "eslint .",
+    "pretest": "npm run esbuild-base && npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.86.0",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.9",
+    "@vscode/vsce": "^2.23.0",
+    "esbuild": "^0.20.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "overrides": {
+    "xml2js": "^0.5.0"
+  }
+}
