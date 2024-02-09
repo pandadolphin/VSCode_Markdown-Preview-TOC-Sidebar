@@ -23,10 +23,6 @@
     "Other"
   ],
   "icon": "./assets/logo/icon.png",
-  "galleryBanner": {
-    "color": "#f5f5f5",
-    "theme": "light"
-  },
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -39,10 +35,13 @@
     ]
   },
   "scripts": {
-    "build": "vsce package --baseImagesUrl https://gitflic.ru/project/aligotr/vscode_markdown-preview-toc-sidebar/",
-    "vscode:prepublish": "npm run esbuild-base",
+    "clean": "rm -rf ./.vscode-test ./node_modules ./out",
+    "update": "npm run clean && npm install",
     "esbuild-base": "esbuild ./src/md-toc-sidebar.js --minify --sourcemap --outfile=./out/md-toc-sidebar.min.js && esbuild ./src/md-toc-sidebar.css --minify --sourcemap --outfile=./out/md-toc-sidebar.min.css",
     "esbuild": "npm run esbuild-base -- --sourcemap",
+    "vscode:prepublish": "npm run esbuild-base",
+    "build": "vsce package",
+    "publish": "vsce publish",
     "lint": "eslint .",
     "pretest": "npm run esbuild-base && npm run lint",
     "test": "vscode-test"
@@ -53,7 +52,6 @@
     "@types/vscode": "^1.86.0",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.9",
-    "@vscode/vsce": "^2.23.0",
     "esbuild": "^0.20.0",
     "eslint": "^8.56.0",
     "typescript": "^5.3.3"
