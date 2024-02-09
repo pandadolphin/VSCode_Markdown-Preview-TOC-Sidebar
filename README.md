@@ -8,4 +8,4 @@
 Примечание:\
 Состояние видимости боковой панели записывается в LocalStorage, в зависимости от направления развития реализации Webview в VSCode, эта настройка может быть отключена.
 
-![Screenshot](assets/docs/Screenshot.jpg)
+![Screenshot](https://gitflic.ru/project/aligotr/vscode_markdown-preview-toc-sidebar/blob/raw?file=assets%2Fdocs%2FScreenshot.jpg)
