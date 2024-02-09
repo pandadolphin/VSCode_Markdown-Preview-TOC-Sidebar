@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "name": "markdown-preview-toc-sidebar",
   "displayName": "Markdown Preview - TOC Sidebar",
@@ -22,7 +22,7 @@
     "Visualization",
     "Other"
   ],
-  "icon": "./assets/logo/icon.png",
+  "icon": "assets/logo/icon.png",
   "engines": {
     "vscode": "^1.86.0"
   },
@@ -35,8 +35,6 @@
     ]
   },
   "scripts": {
-    "clean": "rm -rf ./.vscode-test ./node_modules ./out",
-    "update": "npm run clean && npm install",
     "esbuild-base": "esbuild ./src/md-toc-sidebar.js --minify --sourcemap --outfile=./out/md-toc-sidebar.min.js && esbuild ./src/md-toc-sidebar.css --minify --sourcemap --outfile=./out/md-toc-sidebar.min.css",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "vscode:prepublish": "npm run esbuild-base",
@@ -52,7 +50,6 @@
     "@types/vscode": "^1.86.0",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.9",
-    "esbuild": "^0.20.0",
     "eslint": "^8.56.0",
     "typescript": "^5.3.3"
   },
