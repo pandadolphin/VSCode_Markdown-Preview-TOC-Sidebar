@@ -26,10 +26,11 @@ jobs:
       - name: Get version from package.json
         id: get_version
         run: |
+          ls -la
           echo "$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Upload vsix as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: aligotr.markdown-preview-toc-sidebar-${{ env.version }}
-          path: D:\a\VSCode_Markdown-Preview-TOC-Sidebar\VSCode_Markdown-Preview-TOC-Sidebar\markdown-preview-toc-sidebar-${{ env.version }}.vsix
+          name: aligotr.markdown-preview-toc-sidebar-${{ env.version }}.vsix
+          path: .\markdown-preview-toc-sidebar-${{ env.version }}.vsix
