@@ -5,13 +5,13 @@
   "displayName": "Markdown Preview - TOC Sidebar",
   "description": "Боковая панель с оглавлением для Markdown Preview.",
   "publisher": "Aligotr",
-  "homepage": "https://gitflic.ru/project/aligotr/vscode_markdown-preview-toc-sidebar",
+  "homepage": "https://github.com/Aligotr/VSCode_Markdown-Preview-TOC-Sidebar",
   "bugs": {
-    "url": "https://gitflic.ru/project/aligotr/vscode_markdown-preview-toc-sidebar/issue"
+    "url": "https://github.com/Aligotr/VSCode_Markdown-Preview-TOC-Sidebar/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://gitflic.ru/project/aligotr/vscode_markdown-preview-toc-sidebar"
+    "url": "https://github.com/Aligotr/VSCode_Markdown-Preview-TOC-Sidebar"
   },
   "keywords": [
     "preview",
