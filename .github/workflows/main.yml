@@ -26,6 +26,11 @@ jobs:
           echo "appName=markdown-preview-toc-sidebar" >> $GITHUB_ENV
           echo "appVersion=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
+      - name: test
+        run: |
+          echo "${{ env.appAuthor }}.${{ env.appName }}-${{ env.appVersion }}"
+          echo $appAuthor.$appName-$appVersion
+
       # - name: Build the extension
       #   run: npm run build
 
