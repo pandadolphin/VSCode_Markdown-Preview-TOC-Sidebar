@@ -29,8 +29,7 @@ jobs:
       - name: test
         run: |
           echo "${{ env.appAuthor }}.${{ env.appName }}-${{ env.appVersion }}"
-          echo $appVersion
-          echo "$appVersion"
+          echo "$appAuthor"
 
       # - name: Build the extension
       #   run: npm run build
