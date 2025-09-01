@@ -26,9 +26,6 @@ jobs:
           Add-Content -Path ${env:GITHUB_ENV} -Value "APP_NAME=markdown-preview-toc-sidebar"
           Add-Content -Path ${env:GITHUB_ENV} -Value "APP_VERSION=$(node -p "require('./package.json').version")"
 
-      - name: test
-        run: env
-
       # - name: Build the extension
       #   run: npm run build
 
