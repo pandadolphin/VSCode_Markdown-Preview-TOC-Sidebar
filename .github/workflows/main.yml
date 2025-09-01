@@ -17,19 +17,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: Clean install dependencies
-        run: npm ci
+      # - name: Clean install dependencies
+      #   run: npm ci
 
-      - name: Build the extension
-        run: npm run build
-
-      - name: Get version from package.json
-        id: get_version
+      - name: Set variables
         run: |
-          echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+          echo "appAuthor=aligotr" >> $GITHUB_ENV
+          echo "appName=markdown-preview-toc-sidebar" >> $GITHUB_ENV
+          echo "appVersion=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
+      # - name: Build the extension
+      #   run: npm run build
 
       - name: Upload vsix as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: aligotr.markdown-preview-toc-sidebar-$VERSION.vsix
-          path: .\markdown-preview-toc-sidebar-$VERSION.vsix
+          name: ${{ env.appAuthor }}.${{ env.appName }}-${{ env.appVersion }}.vsix
+          path: .\${{ env.appName }}-${{ env.appVersion }}.vsix
