@@ -38,8 +38,8 @@
     "esbuild-base": "esbuild ./src/md-toc-sidebar.js --minify --sourcemap --outfile=./out/md-toc-sidebar.min.js && esbuild ./src/md-toc-sidebar.css --minify --sourcemap --outfile=./out/md-toc-sidebar.min.css",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "vscode:prepublish": "npm run esbuild-base",
-    "build": "vsce package",
-    "publish": "vsce publish",
+    "build": "npx vsce package",
+    "publish": "npx vsce publish",
     "lint": "eslint .",
     "pretest": "npm run esbuild-base && npm run lint",
     "test": "vscode-test"
@@ -48,6 +48,7 @@
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@types/vscode": "^1.86.0",
+    "@vscode/vsce": "^2.15.0",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.9",
     "eslint": "^8.56.0",
