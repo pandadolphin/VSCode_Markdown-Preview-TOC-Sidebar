@@ -35,14 +35,14 @@
     ]
   },
   "scripts": {
-    "esbuild-base": "npm run esbuild ./src/md-toc-sidebar.js --minify --sourcemap --outfile=./out/md-toc-sidebar.min.js && npm run esbuild ./src/md-toc-sidebar.css --minify --sourcemap --outfile=./out/md-toc-sidebar.min.css",
+    "esbuild-base": "npx esbuild ./src/md-toc-sidebar.js --minify --sourcemap --outfile=./out/md-toc-sidebar.min.js && npx esbuild ./src/md-toc-sidebar.css --minify --sourcemap --outfile=./out/md-toc-sidebar.min.css",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "vscode:prepublish": "npm run esbuild-base",
     "build": "npx vsce package",
     "publish": "npx vsce publish",
-    "lint": "npm run eslint .",
+    "lint": "npx eslint .",
     "pretest": "npm run esbuild-base && npm run lint",
-    "test": "npm run vscode-test"
+    "test": "vscode-test"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
