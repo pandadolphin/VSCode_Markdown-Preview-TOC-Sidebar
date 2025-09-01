@@ -17,8 +17,8 @@ jobs:
         with:
           node-version: 20
 
-      # - name: Clean install dependencies
-      #   run: npm ci
+      - name: Clean install dependencies
+        run: npm ci
 
       - name: Set variables
         run: |
@@ -26,13 +26,8 @@ jobs:
           Add-Content -Path ${env:GITHUB_ENV} -Value "APP_NAME=markdown-preview-toc-sidebar"
           Add-Content -Path ${env:GITHUB_ENV} -Value "APP_VERSION=$(node -p "require('./package.json').version")"
 
-      - name: test
-        run: |
-          echo "1/" $env:APP_VERSION
-          echo "2/" ${ env:APP_VERSION }
-
-      # - name: Build the extension
-      #   run: npm run build
+      - name: Build the extension
+        run: npm run build
 
       - name: Upload vsix as artifact
         uses: actions/upload-artifact@v4
