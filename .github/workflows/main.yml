@@ -22,9 +22,9 @@ jobs:
 
       - name: Set variables
         run: |
-          echo "appAuthor=aligotr" >> $GITHUB_ENV
-          echo "appName=markdown-preview-toc-sidebar" >> $GITHUB_ENV
-          echo "appVersion=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+          echo "APP_AUTHOR=aligotr" >> $GITHUB_ENV
+          echo "APP_NAME=markdown-preview-toc-sidebar" >> $GITHUB_ENV
+          echo "APP_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: test
         run: env
