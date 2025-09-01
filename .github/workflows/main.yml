@@ -28,6 +28,7 @@ jobs:
 
       - name: test
         run: |
+          echo $(node -p "require('./package.json').version")
           echo "${{ env.appAuthor }}.${{ env.appName }}-${{ env.appVersion }}"
           echo "$appAuthor"
 
