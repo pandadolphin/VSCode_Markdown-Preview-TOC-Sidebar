@@ -26,8 +26,7 @@ jobs:
       - name: Get version from package.json
         id: get_version
         run: |
-          echo "$(node -p "require('./package.json').version")"
-          echo "$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Upload vsix as artifact
         uses: actions/upload-artifact@v4
