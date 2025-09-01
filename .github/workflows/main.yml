@@ -29,8 +29,8 @@ jobs:
       - name: test
         run: |
           echo $(node -p "require('./package.json').version")
-          echo "${{ env.appAuthor }}.${{ env.appName }}-${{ env.appVersion }}"
-          echo "$appAuthor"
+          echo ${{ env.appAuthor }}.${{ env.appName }}-${{ env.appVersion }}
+          echo $appAuthor
 
       # - name: Build the extension
       #   run: npm run build
