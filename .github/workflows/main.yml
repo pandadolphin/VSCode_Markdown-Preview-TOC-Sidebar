@@ -37,5 +37,5 @@ jobs:
       - name: Upload vsix as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: $env:appAuthor
-          path: ${{ env.appVersion }}
+          name: ${ env:APP_AUTHOR }.$env:APP_NAME-${{ env.APP_VERSION }}.vsix
+          path: .\${{ env.APP_NAME }}-${{ env.APP_VERSION }}.vsix
