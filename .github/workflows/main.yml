@@ -28,8 +28,8 @@ jobs:
 
       - name: test
         run: |
-          echo $env:APP_VERSION
-          echo ${ env:APP_VERSION }
+          echo "1/" $env:APP_VERSION
+          echo "2/" ${ env:APP_VERSION }
 
       # - name: Build the extension
       #   run: npm run build
@@ -37,5 +37,5 @@ jobs:
       - name: Upload vsix as artifact
         uses: actions/upload-artifact@v4
         with:
-          name:  $env:appAuthor.${{ env.appName }}-${{ env.appVersion }}.vsix
-          path: .\${ env:appName }-${{ env.appVersion }}.vsix
+          name: $env:appAuthor
+          path: ${{ env.appVersion }}
