@@ -28,10 +28,71 @@ const translations = {
     headersNotFound: "文档标题将显示在这里",
     setLocalStorageError: "LocalStorage: 保存数据时出错",
     getLocalStorageError: "LocalStorage: 获取数据时出错"
+  },
+  ja: {
+    sidebarHeader: "目次",
+    headersNotFound: "ドキュメントのヘッダーがここに表示されます",
+    setLocalStorageError: "LocalStorage: データの保存エラー",
+    getLocalStorageError: "LocalStorage: データの取得エラー"
+  },
+  fr: {
+    sidebarHeader: "Table des matières",
+    headersNotFound: "Les titres du document seront affichés ici",
+    setLocalStorageError: "LocalStorage: Erreur lors de l'enregistrement des données",
+    getLocalStorageError: "LocalStorage: Erreur lors de la récupération des données"
+  },
+  de: {
+    sidebarHeader: "Inhaltsverzeichnis",
+    headersNotFound: "Dokumentüberschriften werden hier angezeigt",
+    setLocalStorageError: "LocalStorage: Fehler beim Speichern der Daten",
+    getLocalStorageError: "LocalStorage: Fehler beim Abrufen der Daten"
+  },
+  nl: {
+    sidebarHeader: "Inhoudsopgave",
+    headersNotFound: "Documentkoppen worden hier weergegeven",
+    setLocalStorageError: "LocalStorage: Fout bij het opslaan van gegevens",
+    getLocalStorageError: "LocalStorage: Fout bij het ophalen van gegevens"
+  },
+  es: {
+    sidebarHeader: "Tabla de contenidos",
+    headersNotFound: "Los encabezados del documento se mostrarán aquí",
+    setLocalStorageError: "LocalStorage: Error al guardar datos",
+    getLocalStorageError: "LocalStorage: Error al recuperar datos"
+  },
+  pt: {
+    sidebarHeader: "Índice",
+    headersNotFound: "Os cabeçalhos do documento serão exibidos aqui",
+    setLocalStorageError: "LocalStorage: Erro ao salvar dados",
+    getLocalStorageError: "LocalStorage: Erro ao recuperar dados"
+  },
+  it: {
+    sidebarHeader: "Indice",
+    headersNotFound: "Le intestazioni del documento verranno visualizzate qui",
+    setLocalStorageError: "LocalStorage: Errore nel salvataggio dei dati",
+    getLocalStorageError: "LocalStorage: Errore nel recupero dei dati"
+  },
+  ko: {
+    sidebarHeader: "목차",
+    headersNotFound: "문서 제목이 여기에 표시됩니다",
+    setLocalStorageError: "LocalStorage: 데이터 저장 오류",
+    getLocalStorageError: "LocalStorage: 데이터 검색 오류"
+  },
+  pl: {
+    sidebarHeader: "Spis treści",
+    headersNotFound: "Nagłówki dokumentu będą wyświetlane tutaj",
+    setLocalStorageError: "LocalStorage: Błąd podczas zapisywania danych",
+    getLocalStorageError: "LocalStorage: Błąd podczas pobierania danych"
+  },
+  tr: {
+    sidebarHeader: "İçindekiler",
+    headersNotFound: "Belge başlıkları burada görüntülenecektir",
+    setLocalStorageError: "LocalStorage: Veri kaydedilirken hata oluştu",
+    getLocalStorageError: "LocalStorage: Veri alınırken hata oluştu"
   }
 }
 
 // Detect and get current language
+// Supported languages: en, ru, zh, ja, fr, de, nl, es, pt, it, ko, pl, tr
 function getLanguage() {
   // Check localStorage for manual override
   const savedLang = localStorage.getItem(languageKey)
@@ -40,7 +101,9 @@ function getLanguage() {
   }
 
   // Detect browser language
+  // navigator.language returns codes like "en-US", "pt-BR", "zh-CN", etc.
   const browserLang = navigator.language || navigator.userLanguage
+  // Extract the primary language code (e.g., "en" from "en-US")
   const langCode = browserLang.toLowerCase().split(/[-_]/)[0]
 
   // Return supported language or default to English

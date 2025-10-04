@@ -16,7 +16,7 @@ VSCode's built-in "Outline" view is not configured to work with the Webview API 
 - **Keyboard Shortcut**: Press `ESC` to toggle sidebar visibility
 - **Responsive Design**: Adapts to different screen sizes with a breakpoint at 1366px
 - **Persistent State**: Remembers sidebar visibility preference in LocalStorage
-- **Multi-language Support**: Automatically detects browser language (English, Russian, Chinese)
+- **Multi-language Support**: Automatically detects browser language (13 languages supported)
 
 ## Language Support
 
@@ -24,10 +24,20 @@ The extension automatically detects your browser language and supports:
 - **English** (en)
 - **Русский** (ru) - Russian
 - **简体中文** (zh) - Simplified Chinese
+- **日本語** (ja) - Japanese
+- **Français** (fr) - French
+- **Deutsch** (de) - German
+- **Nederlands** (nl) - Dutch
+- **Español** (es) - Spanish
+- **Português** (pt) - Portuguese
+- **Italiano** (it) - Italian
+- **한국어** (ko) - Korean
+- **Polski** (pl) - Polish
+- **Türkçe** (tr) - Turkish
 
 To manually set the language, open browser console in markdown preview and run:
 ```javascript
-localStorage.setItem("toc-sidebar-language", "en") // or "ru" or "zh"
+localStorage.setItem("toc-sidebar-language", "en") // or any supported language code
 ```
 
 ## Note
