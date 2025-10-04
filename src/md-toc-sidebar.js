@@ -65,29 +65,33 @@ function getLocalStorage(key) {
 }
 
 // Переключение боковой панели
-function toggleSidebarStatusListener(btnToggleSidebar) {
-  btnToggleSidebar.addEventListener("click", function () {
-    if (sidebarWrapper) {
-      // Проверка скрыта ли боковая панель
-      // Если да, то отобразить
-      // Иначе скрыть
-      const sidebarStatus = sidebarWrapper.classList.contains("toc-sidebar-hidden")
-      if (sidebarStatus) {
-        markdownBody.classList.add("toc-max-width-limit")
-        sidebarWrapper.classList.remove("toc-sidebar-hidden")
-        btnToggleSidebar.classList.remove("toc-sm-position-absolute")
-        setLocalStorage(sidebarStatusKey, "visible")
-      } else {
-        markdownBody.classList.remove("toc-max-width-limit")
-        sidebarWrapper.classList.add("toc-sidebar-hidden")
-        btnToggleSidebar.classList.add("toc-sm-position-absolute")
-        setLocalStorage(sidebarStatusKey, "hidden")
-      }
-    } else {
-      generateSidebar()
+function toggleSidebar(btnToggleSidebar) {
+  if (sidebarWrapper) {
+    // Проверка скрыта ли боковая панель
+    // Если да, то отобразить
+    // Иначе скрыть
+    const sidebarStatus = sidebarWrapper.classList.contains("toc-sidebar-hidden")
+    if (sidebarStatus) {
+      markdownBody.classList.add("toc-max-width-limit")
+      sidebarWrapper.classList.remove("toc-sidebar-hidden")
       btnToggleSidebar.classList.remove("toc-sm-position-absolute")
       setLocalStorage(sidebarStatusKey, "visible")
+    } else {
+      markdownBody.classList.remove("toc-max-width-limit")
+      sidebarWrapper.classList.add("toc-sidebar-hidden")
+      btnToggleSidebar.classList.add("toc-sm-position-absolute")
+      setLocalStorage(sidebarStatusKey, "hidden")
     }
+  } else {
+    generateSidebar()
+    btnToggleSidebar.classList.remove("toc-sm-position-absolute")
+    setLocalStorage(sidebarStatusKey, "visible")
+  }
+}
+
+function toggleSidebarStatusListener(btnToggleSidebar) {
+  btnToggleSidebar.addEventListener("click", function () {
+    toggleSidebar(btnToggleSidebar)
   })
 }
 
@@ -189,6 +193,13 @@ function start() {
   btnToggleSidebar.textContent = "☰"
   markdownBody.insertBefore(btnToggleSidebar, markdownBody.firstChild)
   toggleSidebarStatusListener(btnToggleSidebar)
+
+  // Добавление обработчика клавиши ESC для переключения боковой панели
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" || event.key === "Esc") {
+      toggleSidebar(btnToggleSidebar)
+    }
+  })
 
   // Если панель оглавления  должна быть скрыта, выход
   if (sidebarIsHidden) {

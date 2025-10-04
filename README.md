@@ -13,6 +13,7 @@ VSCode's built-in "Outline" view is not configured to work with the Webview API 
 ## Features
 
 - **Auto Table of Contents**: Automatically generates a navigable sidebar from document headers (h1-h6)
+- **Keyboard Shortcut**: Press `ESC` to toggle sidebar visibility
 - **Responsive Design**: Adapts to different screen sizes with a breakpoint at 1366px
 - **Persistent State**: Remembers sidebar visibility preference in LocalStorage
 - **Multi-language Support**: Automatically detects browser language (English, Russian, Chinese)

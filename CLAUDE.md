@@ -52,10 +52,11 @@ Uses esbuild to minify both JS and CSS:
 4. If found, calls `start()` to initialize
 
 **Core Functions**:
-- `start()` - Creates toggle button, checks LocalStorage for sidebar visibility preference
+- `start()` - Creates toggle button, sets up ESC key listener, checks LocalStorage for sidebar visibility preference
 - `generateSidebar()` - Creates sidebar wrapper and calls `generateToc()`
 - `generateToc()` - Parses h1-h6 headers, builds nested `<ul>` structure with proper hierarchy
-- `toggleSidebarStatusListener()` - Handles visibility toggle and LocalStorage persistence
+- `toggleSidebar()` - Core toggle logic for showing/hiding sidebar
+- `toggleSidebarStatusListener()` - Handles button click events for toggling
 
 **State Management**:
 - Sidebar visibility stored in LocalStorage with key `"toc-sidebar-visibility"`
