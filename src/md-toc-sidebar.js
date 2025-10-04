@@ -190,6 +190,10 @@ function generateToc() {
       const targetId = header.id
       setActiveTocItem(targetId, true) // force = true
 
+      // Remove focus from the clicked link to prevent stuck focus styling
+      // This prevents the link from showing hover-like background after cursor moves away
+      this.blur()
+
       // Scroll to target header
       header.scrollIntoView({
         behavior: "smooth",
