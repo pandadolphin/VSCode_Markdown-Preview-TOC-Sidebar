@@ -229,13 +229,13 @@ a:focus {
 
 /* Active Section Highlighting */
 .toc ul li.active {
-  background-color: var(--vscode-list-activeSelectionBackground);
+  background-color: var(--vscode-list-inactiveSelectionBackground, var(--vscode-list-hoverBackground));
   border-left: 3px solid var(--vscode-focusBorder);
   padding-left: 1px; /* Compensate for border */
 }
 
 .toc ul li.active > a {
-  color: var(--vscode-list-activeSelectionForeground);
+  color: var(--vscode-foreground);
   font-weight: 600;
 }
 

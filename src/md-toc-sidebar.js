@@ -333,8 +333,10 @@ function start() {
   // Build TOC sidebar panel
   generateSidebar()
 
-  // Initialize headers observer
-  initHeadersObserver()
+  // Initialize headers observer with small delay to allow page to settle
+  setTimeout(() => {
+    initHeadersObserver()
+  }, 100)
 }
 
 // Check DOM loading status
