@@ -201,11 +201,15 @@ a:focus {
 .toc ul li {
   border-radius: 3px;
   transition: background-color 150ms ease-in-out;
+  border-left: 3px solid transparent; /* Reserve space for active border */
+  padding-left: 1px;
 }
 
-.toc ul li:hover,
-.toc ul li:has(a:focus) {
+/* Only apply hover to non-active items */
+.toc ul li:not(.active):hover,
+.toc ul li:not(.active):has(a:focus) {
   background-color: var(--vscode-list-hoverBackground);
+  opacity: 0.8; /* Slightly transparent to differentiate from active */
 }
 
 .toc ul li a {
@@ -216,7 +220,7 @@ a:focus {
   cursor: pointer;
 }
 
-.toc ul li:hover a,
+.toc ul li:not(.active):hover a,
 .toc ul li a:focus {
   color: var(--vscode-list-hoverForeground);
   outline: none;
@@ -227,16 +231,22 @@ a:focus {
   outline-offset: -1px;
 }
 
-/* Active Section Highlighting */
+/* Active Section Highlighting - More distinct */
 .toc ul li.active {
-  background-color: var(--vscode-list-inactiveSelectionBackground, var(--vscode-list-hoverBackground));
+  background-color: var(--vscode-list-activeSelectionBackground, var(--vscode-list-inactiveSelectionBackground));
   border-left: 3px solid var(--vscode-focusBorder);
-  padding-left: 1px; /* Compensate for border */
+  opacity: 1; /* Full opacity for active */
 }
 
 .toc ul li.active > a {
-  color: var(--vscode-foreground);
-  font-weight: 600;
+  color: var(--vscode-list-activeSelectionForeground, var(--vscode-foreground));
+  font-weight: 700; /* Bolder for more distinction */
+}
+
+/* Active item should not change on hover */
+.toc ul li.active:hover {
+  background-color: var(--vscode-list-activeSelectionBackground, var(--vscode-list-inactiveSelectionBackground));
+  opacity: 1;
 }
 
 /* Utilities */
