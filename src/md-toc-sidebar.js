@@ -6,6 +6,7 @@ let headersObserver = null
 let activeHeaderId = null
 let isClickScrolling = false
 let clickScrollTimeout = null
+let hasUserScrolled = false
 
 // Localization strings
 const translations = {
@@ -173,6 +174,9 @@ function generateToc() {
     tocLink.addEventListener("click", function(event) {
       event.preventDefault()
 
+      // Mark that user has interacted (enables highlighting)
+      hasUserScrolled = true
+
       // Set flag that click scrolling is happening
       isClickScrolling = true
 
@@ -229,6 +233,11 @@ function setActiveTocItem(headerId, force = false) {
 
   // If click scrolling is happening, ignore updates from observer
   if (isClickScrolling && !force) {
+    return
+  }
+
+  // Don't highlight on initial load - only after user has scrolled or clicked
+  if (!hasUserScrolled && !force) {
     return
   }
 
@@ -337,6 +346,14 @@ function start() {
   setTimeout(() => {
     initHeadersObserver()
   }, 100)
+
+  // Detect user scroll to enable active highlighting
+  let scrollTimeout = null
+  window.addEventListener("scroll", function() {
+    if (!hasUserScrolled) {
+      hasUserScrolled = true
+    }
+  }, { once: false, passive: true })
 }
 
 // Check DOM loading status
