@@ -117,8 +117,10 @@ a:focus {
     right: var(--toc-sidebar-right);
     width: var(--toc-sidebar-width);
     height: auto;
+    max-height: calc(100vh - var(--markdown-margin-top) - var(--markdown-h1) + var(--toc-sidebar-h1));
     margin-top: calc(var(--markdown-margin-top) + var(--markdown-h1) - var(--toc-sidebar-h1));
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   #toc-btn-toggle-sidebar {
