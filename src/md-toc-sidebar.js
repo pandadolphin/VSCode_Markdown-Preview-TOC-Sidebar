@@ -49,7 +49,7 @@ function getLanguage() {
 const currentLang = getLanguage()
 const i18n = translations[currentLang]
 
-// Утилиты
+// Utilities
 function setLocalStorage(key, value) {
   try {
     localStorage.setItem(key, value)
@@ -68,30 +68,30 @@ function getLocalStorage(key) {
   return localStorageItem
 }
 
-// Переключение боковой панели
+// Toggle sidebar visibility
 function toggleSidebar(btnToggleSidebar) {
   if (sidebarWrapper) {
-    // Проверка скрыта ли боковая панель
-    // Если да, то отобразить
-    // Иначе скрыть
+    // Check if sidebar is hidden
+    // If yes, show it
+    // Otherwise hide it
     const sidebarStatus = sidebarWrapper.classList.contains("toc-sidebar-hidden")
     if (sidebarStatus) {
       markdownBody.classList.add("toc-max-width-limit")
       sidebarWrapper.classList.remove("toc-sidebar-hidden")
       setLocalStorage(sidebarStatusKey, "visible")
-      // Запустить наблюдатель заголовков
+      // Start headers observer
       initHeadersObserver()
     } else {
       markdownBody.classList.remove("toc-max-width-limit")
       sidebarWrapper.classList.add("toc-sidebar-hidden")
       setLocalStorage(sidebarStatusKey, "hidden")
-      // Остановить наблюдатель заголовков
+      // Stop headers observer
       stopHeadersObserver()
     }
   } else {
     generateSidebar()
     setLocalStorage(sidebarStatusKey, "visible")
-    // Запустить наблюдатель заголовков
+    // Start headers observer
     initHeadersObserver()
   }
 }
@@ -102,7 +102,7 @@ function toggleSidebarStatusListener(btnToggleSidebar) {
   })
 }
 
-// Построение содержания оглавления
+// Build table of contents
 function generateToc() {
   const toc = document.createElement("div")
   toc.className = "toc"
@@ -111,11 +111,11 @@ function generateToc() {
   sidebarHeaderTitle.textContent = i18n.sidebarHeader
   toc.appendChild(sidebarHeaderTitle)
 
-  // Получение селекторов заголовков
+  // Get header selectors
   const headers = markdownBody.querySelectorAll("h1, h2, h3, h4, h5, h6")
 
-  // Проверка наличия заголовков
-  // Если заголовков нет, вывод сообщения пользователю о данном событии и выход из функции
+  // Check for headers
+  // If no headers, show message to user and exit function
   if (headers.length === 0) {
     const headersNotFoundElement = document.createElement("p")
     headersNotFoundElement.textContent = i18n.headersNotFound
@@ -123,25 +123,25 @@ function generateToc() {
     return toc
   }
 
-  // Построение "toc"
+  // Build TOC
   let levels = []
   let currentLevel = null
 
   headers.forEach((header, index) => {
     const levelIndex = parseInt(header.tagName.substring(1))
 
-    // Проверка наличия "header.id"
-    // Если "header.id" отсутствует, то он присваивается
+    // Check for header.id
+    // If header.id is missing, assign it
     if (!header.id) {
       header.id = `toc-header-${index}`
     }
 
-    // Если текущего уровня нет, то он создаётся
+    // If current level doesn't exist, create it
     while (levelIndex > levels.length) {
       const newList = document.createElement("ul")
       if (currentLevel) {
-        // Добавление нового <ul> в последний <li>
-        // Если <li> не обнаружено, то добавление нового <ul> в текущий <ul>
+        // Add new <ul> to last <li>
+        // If <li> not found, add new <ul> to current <ul>
         const lastElementChild = currentLevel.lastElementChild
         if (lastElementChild) {
           currentLevel.lastElementChild.appendChild(newList)
@@ -149,49 +149,49 @@ function generateToc() {
           currentLevel.appendChild(newList)
         }
       } else {
-        // Если это самый первый список, добавление его в контейнер
+        // If this is the first list, add it to container
         toc.appendChild(newList)
       }
       currentLevel = newList
       levels.push(newList)
     }
 
-    // Если уровень <h> ниже текущего <ul>, то переход к нижестоящему по уровню <ul>
+    // If heading level is lower than current <ul>, move to lower level <ul>
     while (levelIndex < levels.length) {
       levels.pop()
       currentLevel = levels[levels.length - 1]
     }
 
-    // Создание элемента <li> с <a>
+    // Create <li> element with <a>
     const tocItem = document.createElement("li")
     tocItem.className = `toc-h${levelIndex}`
     const tocLink = document.createElement("a")
     tocLink.href = `#${header.id}`
     tocLink.innerText = header.textContent || header.innerText
 
-    // Добавление обработчика клика для предотвращения конфликтов с observer
+    // Add click handler to prevent conflicts with observer
     tocLink.addEventListener("click", function(event) {
       event.preventDefault()
 
-      // Установить флаг, что происходит прокрутка после клика
+      // Set flag that click scrolling is happening
       isClickScrolling = true
 
-      // Очистить предыдущий таймаут
+      // Clear previous timeout
       if (clickScrollTimeout) {
         clearTimeout(clickScrollTimeout)
       }
 
-      // Установить активный элемент немедленно
+      // Set active element immediately
       const targetId = header.id
       setActiveTocItem(targetId, true) // force = true
 
-      // Прокрутить к целевому заголовку
+      // Scroll to target header
       header.scrollIntoView({
         behavior: "smooth",
         block: "start"
       })
 
-      // Сбросить флаг через 1 секунду (после завершения анимации прокрутки)
+      // Reset flag after 1 second (after scroll animation completes)
       clickScrollTimeout = setTimeout(() => {
         isClickScrolling = false
       }, 1000)
@@ -199,50 +199,50 @@ function generateToc() {
 
     tocItem.appendChild(tocLink)
 
-    // Добавление нового <li> в текущий уровень <ul>
+    // Add new <li> to current <ul> level
     currentLevel.appendChild(tocItem)
   })
 
-  // Возврат блока оглавления
+  // Return TOC block
   return toc
 }
 
-// Построение панели оглавления
+// Build TOC sidebar panel
 function generateSidebar() {
   markdownBody.classList.add("toc-max-width-limit")
 
   sidebarWrapper = document.createElement("div")
   sidebarWrapper.className = "toc-sidebar-wrapper"
 
-  // Построение содержания оглавления
+  // Build table of contents
   const toc = generateToc()
 
   sidebarWrapper.appendChild(toc)
   document.body.insertBefore(sidebarWrapper, document.body.firstChild)
 }
 
-// Установка активного элемента в TOC
+// Set active TOC item
 function setActiveTocItem(headerId, force = false) {
   if (activeHeaderId === headerId) {
-    return // Уже активен
+    return // Already active
   }
 
-  // Если сейчас происходит прокрутка после клика, игнорировать обновления от observer
+  // If click scrolling is happening, ignore updates from observer
   if (isClickScrolling && !force) {
     return
   }
 
-  // Удалить активный класс со всех элементов
+  // Remove active class from all items
   const allTocItems = sidebarWrapper.querySelectorAll(".toc li")
   allTocItems.forEach(item => item.classList.remove("active"))
 
-  // Добавить активный класс к соответствующему элементу
+  // Add active class to corresponding item
   const activeTocLink = sidebarWrapper.querySelector(`a[href="#${headerId}"]`)
   if (activeTocLink) {
     const activeTocItem = activeTocLink.parentElement
     activeTocItem.classList.add("active")
 
-    // Прокрутка TOC, чтобы активный элемент был видимым
+    // Scroll TOC to keep active item visible
     activeTocItem.scrollIntoView({
       behavior: "smooth",
       block: "nearest"
@@ -252,23 +252,23 @@ function setActiveTocItem(headerId, force = false) {
   }
 }
 
-// Инициализация наблюдателя заголовков
+// Initialize headers observer
 function initHeadersObserver() {
   const headers = markdownBody.querySelectorAll("h1, h2, h3, h4, h5, h6")
   if (headers.length === 0) {
     return
   }
 
-  // Настройка IntersectionObserver
+  // Configure IntersectionObserver
   const observerOptions = {
     root: null, // viewport
-    rootMargin: "-20% 0px -70% 0px", // Триггер когда заголовок в верхней трети viewport
+    rootMargin: "-20% 0px -70% 0px", // Trigger when header is in upper third of viewport
     threshold: 0
   }
 
-  // Создание observer
+  // Create observer
   headersObserver = new IntersectionObserver((entries) => {
-    // Собрать все видимые заголовки
+    // Collect all visible headers
     const visibleHeaders = []
 
     entries.forEach(entry => {
@@ -280,27 +280,27 @@ function initHeadersObserver() {
       }
     })
 
-    // Если есть видимые заголовки, выбрать самый верхний
+    // If there are visible headers, select the topmost one
     if (visibleHeaders.length > 0) {
       visibleHeaders.sort((a, b) => a.top - b.top)
       setActiveTocItem(visibleHeaders[0].id)
     }
   }, observerOptions)
 
-  // Наблюдение за всеми заголовками
+  // Observe all headers
   headers.forEach(header => {
     headersObserver.observe(header)
   })
 }
 
-// Остановка наблюдателя заголовков
+// Stop headers observer
 function stopHeadersObserver() {
   if (headersObserver) {
     headersObserver.disconnect()
     headersObserver = null
     activeHeaderId = null
 
-    // Удалить активные классы
+    // Remove active classes
     if (sidebarWrapper) {
       const allTocItems = sidebarWrapper.querySelectorAll(".toc li")
       allTocItems.forEach(item => item.classList.remove("active"))
@@ -309,7 +309,7 @@ function stopHeadersObserver() {
 }
 
 function start() {
-  // Построение кнопки переключения статуса панели оглавления
+  // Build toggle button for TOC sidebar
   const sidebarIsHidden = getLocalStorage(sidebarStatusKey) === "hidden"
 
   const btnToggleSidebar = document.createElement("button")
@@ -318,27 +318,27 @@ function start() {
   markdownBody.insertBefore(btnToggleSidebar, markdownBody.firstChild)
   toggleSidebarStatusListener(btnToggleSidebar)
 
-  // Добавление обработчика клавиши ESC для переключения боковой панели
+  // Add ESC key handler to toggle sidebar
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape" || event.key === "Esc") {
       toggleSidebar(btnToggleSidebar)
     }
   })
 
-  // Если панель оглавления должна быть скрыта, выход
+  // If TOC sidebar should be hidden, exit
   if (sidebarIsHidden) {
     return
   }
 
-  // Построение панели оглавления
+  // Build TOC sidebar panel
   generateSidebar()
 
-  // Инициализация наблюдателя заголовков
+  // Initialize headers observer
   initHeadersObserver()
 }
 
-// Проверка статуса загрузки DOM
-// Если DOM загружен, то выполнение основных функций
+// Check DOM loading status
+// If DOM is loaded, execute main functions
 document.onreadystatechange = () => {
   if (document.readyState === "complete") {
     markdownBody = document.querySelector("body > .markdown-body")

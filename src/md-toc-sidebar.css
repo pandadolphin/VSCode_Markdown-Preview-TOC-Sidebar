@@ -1,14 +1,14 @@
-/*Примечание:
-- Произведено переопределение отступов "body",
-  т.к. оригинальный вариант не позволял считать точкой отсчёта "top: 0";
-- Произведено переопределение размеров шрифта,
-  т.к. оригинальный вариант был рассчитан в "em",
-  что не позволяло точно вычислить смещение дополнительной панели,
-  относительно верхней границы страницы;
-- У кнопок хорошо смотрелся цвет: #204d6e.
+/*Note:
+- Body padding has been redefined
+  because the original version didn't allow using "top: 0" as reference point;
+- Font sizes have been redefined
+  because the original version was calculated in "em",
+  which didn't allow precise calculation of sidebar offset
+  relative to the top of the page;
+- Buttons looked good with color: #204d6e.
 */
 
-/* Переменные */
+/* Variables */
 :root {
   --toc-sidebar-right: 26px;
   --toc-sidebar-width: 320px;
@@ -18,7 +18,7 @@
   --markdown-h-padding-bottom: 0.5rem;
 }
 
-/* Глобальные */
+/* Global styles */
 .markdown-body h1 {
   font-size: var(--markdown-h1);
   scroll-margin-top: var(--markdown-h1);
@@ -80,7 +80,7 @@ a:focus {
   }
 }
 
-/* Панель оглавления */
+/* TOC Sidebar Panel */
 .toc-sidebar-wrapper a {
   font-size: 1rem;
 }
@@ -239,7 +239,7 @@ a:focus {
   font-weight: 600;
 }
 
-/* Утилиты */
+/* Utilities */
 .toc-sidebar-hidden {
   display: none !important;
 }
