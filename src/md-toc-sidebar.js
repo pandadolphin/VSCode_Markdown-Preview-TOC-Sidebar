@@ -4,6 +4,8 @@ let sidebarStatusKey = "toc-sidebar-visibility"
 let languageKey = "toc-sidebar-language"
 let headersObserver = null
 let activeHeaderId = null
+let isClickScrolling = false
+let clickScrollTimeout = null
 
 // Localization strings
 const translations = {
@@ -166,6 +168,35 @@ function generateToc() {
     const tocLink = document.createElement("a")
     tocLink.href = `#${header.id}`
     tocLink.innerText = header.textContent || header.innerText
+
+    // Добавление обработчика клика для предотвращения конфликтов с observer
+    tocLink.addEventListener("click", function(event) {
+      event.preventDefault()
+
+      // Установить флаг, что происходит прокрутка после клика
+      isClickScrolling = true
+
+      // Очистить предыдущий таймаут
+      if (clickScrollTimeout) {
+        clearTimeout(clickScrollTimeout)
+      }
+
+      // Установить активный элемент немедленно
+      const targetId = header.id
+      setActiveTocItem(targetId, true) // force = true
+
+      // Прокрутить к целевому заголовку
+      header.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      })
+
+      // Сбросить флаг через 1 секунду (после завершения анимации прокрутки)
+      clickScrollTimeout = setTimeout(() => {
+        isClickScrolling = false
+      }, 1000)
+    })
+
     tocItem.appendChild(tocLink)
 
     // Добавление нового <li> в текущий уровень <ul>
@@ -191,9 +222,14 @@ function generateSidebar() {
 }
 
 // Установка активного элемента в TOC
-function setActiveTocItem(headerId) {
+function setActiveTocItem(headerId, force = false) {
   if (activeHeaderId === headerId) {
     return // Уже активен
+  }
+
+  // Если сейчас происходит прокрутка после клика, игнорировать обновления от observer
+  if (isClickScrolling && !force) {
+    return
   }
 
   // Удалить активный класс со всех элементов
