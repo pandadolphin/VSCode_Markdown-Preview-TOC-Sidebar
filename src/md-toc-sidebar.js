@@ -196,10 +196,30 @@ function generateToc() {
         block: "start"
       })
 
-      // Reset flag after 1 second (after scroll animation completes)
+      // Add one-time scroll listener to detect manual scrolling
+      // This clears the flag if user manually scrolls during the animation
+      const handleManualScroll = function() {
+        // Small delay to allow programmatic scroll to start
+        setTimeout(() => {
+          isClickScrolling = false
+          if (clickScrollTimeout) {
+            clearTimeout(clickScrollTimeout)
+            clickScrollTimeout = null
+          }
+        }, 150) // 150ms allows click scroll to start but catches manual scroll
+
+        // Remove this listener after first trigger
+        window.removeEventListener("scroll", handleManualScroll)
+      }
+
+      // Add the listener
+      window.addEventListener("scroll", handleManualScroll, { once: true, passive: true })
+
+      // Also set timeout as fallback (but now shorter since we have scroll detection)
       clickScrollTimeout = setTimeout(() => {
         isClickScrolling = false
-      }, 1000)
+        window.removeEventListener("scroll", handleManualScroll)
+      }, 500) // Reduced from 1000ms to 500ms
     })
 
     tocItem.appendChild(tocLink)
