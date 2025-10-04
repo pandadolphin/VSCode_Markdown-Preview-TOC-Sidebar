@@ -4,6 +4,7 @@ let sidebarStatusKey = "toc-sidebar-visibility"
 let languageKey = "toc-sidebar-language"
 let headersObserver = null
 let activeHeaderId = null
+let activeItemElement = null
 let isClickScrolling = false
 let clickScrollTimeout = null
 let hasUserScrolled = false
@@ -241,15 +242,26 @@ function setActiveTocItem(headerId, force = false) {
     return
   }
 
-  // Remove active class from all items
-  const allTocItems = sidebarWrapper.querySelectorAll(".toc li")
-  allTocItems.forEach(item => item.classList.remove("active"))
+  // Remove active class from previously active item (if exists) - fastest approach
+  if (activeItemElement) {
+    activeItemElement.classList.remove("active")
+    activeItemElement = null
+  }
+
+  // Also do a full cleanup as safety net - only query for items that actually have active class
+  const activeItems = sidebarWrapper.querySelectorAll(".toc li.active")
+  if (activeItems.length > 0) {
+    activeItems.forEach(item => item.classList.remove("active"))
+  }
 
   // Add active class to corresponding item
   const activeTocLink = sidebarWrapper.querySelector(`a[href="#${headerId}"]`)
   if (activeTocLink) {
     const activeTocItem = activeTocLink.parentElement
     activeTocItem.classList.add("active")
+
+    // Store reference to active element for fast cleanup next time
+    activeItemElement = activeTocItem
 
     // Scroll TOC to keep active item visible
     activeTocItem.scrollIntoView({
@@ -308,11 +320,12 @@ function stopHeadersObserver() {
     headersObserver.disconnect()
     headersObserver = null
     activeHeaderId = null
+    activeItemElement = null
 
     // Remove active classes
     if (sidebarWrapper) {
-      const allTocItems = sidebarWrapper.querySelectorAll(".toc li")
-      allTocItems.forEach(item => item.classList.remove("active"))
+      const activeItems = sidebarWrapper.querySelectorAll(".toc li.active")
+      activeItems.forEach(item => item.classList.remove("active"))
     }
   }
 }
