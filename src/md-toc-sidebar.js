@@ -154,6 +154,7 @@ function generateToc() {
 
     // Создание элемента <li> с <a>
     const tocItem = document.createElement("li")
+    tocItem.className = `toc-h${levelIndex}`
     const tocLink = document.createElement("a")
     tocLink.href = `#${header.id}`
     tocLink.innerText = header.textContent || header.innerText

@@ -162,6 +162,33 @@ a:focus {
   text-align: center;
 }
 
+/* Visual Hierarchy by Heading Level */
+.toc .toc-h1 > a {
+  font-weight: 600;
+  font-size: 1rem;
+  opacity: 1;
+}
+
+.toc .toc-h2 > a {
+  font-weight: 500;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.toc .toc-h3 > a {
+  font-weight: 400;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.toc .toc-h4 > a,
+.toc .toc-h5 > a,
+.toc .toc-h6 > a {
+  font-weight: 400;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
 /* Утилиты */
 .toc-sidebar-hidden {
   display: none !important;
