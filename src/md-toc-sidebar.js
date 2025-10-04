@@ -100,7 +100,43 @@ function getLanguage() {
     return savedLang
   }
 
-  // Detect browser language
+  // Try multiple detection methods
+
+  // Method 1: Check document language attribute
+  const docLang = document.documentElement.lang || document.querySelector('html')?.getAttribute('lang')
+  if (docLang) {
+    const docLangCode = docLang.toLowerCase().split(/[-_]/)[0]
+    if (translations[docLangCode]) {
+      return docLangCode
+    }
+  }
+
+  // Method 2: Check meta tags for language hints
+  const metaLang = document.querySelector('meta[name="language"]')?.content ||
+                    document.querySelector('meta[http-equiv="content-language"]')?.content
+  if (metaLang) {
+    const metaLangCode = metaLang.toLowerCase().split(/[-_]/)[0]
+    if (translations[metaLangCode]) {
+      return metaLangCode
+    }
+  }
+
+  // Method 3: Try to detect from VS Code's UI (check parent window if in iframe)
+  try {
+    if (window.parent && window.parent !== window) {
+      const parentLang = window.parent.document.documentElement.lang
+      if (parentLang) {
+        const parentLangCode = parentLang.toLowerCase().split(/[-_]/)[0]
+        if (translations[parentLangCode]) {
+          return parentLangCode
+        }
+      }
+    }
+  } catch (e) {
+    // Cross-origin access denied, ignore
+  }
+
+  // Method 4: Detect browser language
   // navigator.language returns codes like "en-US", "pt-BR", "zh-CN", etc.
   const browserLang = navigator.language || navigator.userLanguage
   // Extract the primary language code (e.g., "en" from "en-US")
@@ -110,9 +146,42 @@ function getLanguage() {
   return translations[langCode] ? langCode : "en"
 }
 
-// Get localized text
-const currentLang = getLanguage()
-const i18n = translations[currentLang]
+// Get localized text (make it dynamic)
+let currentLang = getLanguage()
+let i18n = translations[currentLang]
+
+// Function to update language dynamically
+function setLanguage(lang) {
+  if (translations[lang]) {
+    currentLang = lang
+    i18n = translations[lang]
+    setLocalStorage(languageKey, lang)
+
+    // Update UI with new language
+    updateUILanguage()
+  }
+}
+
+// Function to update UI text when language changes
+function updateUILanguage() {
+  // Update sidebar header if it exists
+  const sidebarHeader = document.querySelector('.toc h1')
+  if (sidebarHeader) {
+    sidebarHeader.textContent = i18n.sidebarHeader
+  }
+
+  // Update no headers message if it exists
+  const noHeadersMsg = document.querySelector('.toc p')
+  if (noHeadersMsg && noHeadersMsg.parentElement.className === 'toc') {
+    noHeadersMsg.textContent = i18n.headersNotFound
+  }
+
+  // Update language selector if it exists
+  const langSelector = document.querySelector('.toc-language-selector')
+  if (langSelector) {
+    langSelector.value = currentLang
+  }
+}
 
 // Utilities
 function setLocalStorage(key, value) {
@@ -172,9 +241,56 @@ function generateToc() {
   const toc = document.createElement("div")
   toc.className = "toc"
 
+  // Create header container with title and language selector
+  const headerContainer = document.createElement("div")
+  headerContainer.className = "toc-header-container"
+  headerContainer.style.cssText = "display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;"
+
   const sidebarHeaderTitle = document.createElement("h1")
   sidebarHeaderTitle.textContent = i18n.sidebarHeader
-  toc.appendChild(sidebarHeaderTitle)
+  sidebarHeaderTitle.style.cssText = "margin: 0; flex: 1;"
+
+  // Create language selector dropdown
+  const langSelector = document.createElement("select")
+  langSelector.className = "toc-language-selector"
+  langSelector.style.cssText = "padding: 2px 5px; font-size: 12px; background: var(--vscode-dropdown-background, #3c3c3c); color: var(--vscode-dropdown-foreground, #ccc); border: 1px solid var(--vscode-dropdown-border, #555); border-radius: 3px; cursor: pointer;"
+  langSelector.title = "Select language / 选择语言"
+
+  // Add language options
+  const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'zh', name: '中文' },
+    { code: 'ja', name: '日本語' },
+    { code: 'ko', name: '한국어' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'fr', name: 'Français' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'es', name: 'Español' },
+    { code: 'pt', name: 'Português' },
+    { code: 'it', name: 'Italiano' },
+    { code: 'nl', name: 'Nederlands' },
+    { code: 'pl', name: 'Polski' },
+    { code: 'tr', name: 'Türkçe' }
+  ]
+
+  languages.forEach(lang => {
+    const option = document.createElement('option')
+    option.value = lang.code
+    option.textContent = lang.name
+    if (lang.code === currentLang) {
+      option.selected = true
+    }
+    langSelector.appendChild(option)
+  })
+
+  // Add change event listener
+  langSelector.addEventListener('change', (e) => {
+    setLanguage(e.target.value)
+  })
+
+  headerContainer.appendChild(sidebarHeaderTitle)
+  headerContainer.appendChild(langSelector)
+  toc.appendChild(headerContainer)
 
   // Get header selectors
   const headers = markdownBody.querySelectorAll("h1, h2, h3, h4, h5, h6")
