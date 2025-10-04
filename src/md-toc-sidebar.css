@@ -227,6 +227,18 @@ a:focus {
   outline-offset: -1px;
 }
 
+/* Active Section Highlighting */
+.toc ul li.active {
+  background-color: var(--vscode-list-activeSelectionBackground);
+  border-left: 3px solid var(--vscode-focusBorder);
+  padding-left: 1px; /* Compensate for border */
+}
+
+.toc ul li.active > a {
+  color: var(--vscode-list-activeSelectionForeground);
+  font-weight: 600;
+}
+
 /* Утилиты */
 .toc-sidebar-hidden {
   display: none !important;

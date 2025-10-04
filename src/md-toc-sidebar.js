@@ -2,6 +2,8 @@ let markdownBody = null
 let sidebarWrapper = null
 let sidebarStatusKey = "toc-sidebar-visibility"
 let languageKey = "toc-sidebar-language"
+let headersObserver = null
+let activeHeaderId = null
 
 // Localization strings
 const translations = {
@@ -75,14 +77,20 @@ function toggleSidebar(btnToggleSidebar) {
       markdownBody.classList.add("toc-max-width-limit")
       sidebarWrapper.classList.remove("toc-sidebar-hidden")
       setLocalStorage(sidebarStatusKey, "visible")
+      // Запустить наблюдатель заголовков
+      initHeadersObserver()
     } else {
       markdownBody.classList.remove("toc-max-width-limit")
       sidebarWrapper.classList.add("toc-sidebar-hidden")
       setLocalStorage(sidebarStatusKey, "hidden")
+      // Остановить наблюдатель заголовков
+      stopHeadersObserver()
     }
   } else {
     generateSidebar()
     setLocalStorage(sidebarStatusKey, "visible")
+    // Запустить наблюдатель заголовков
+    initHeadersObserver()
   }
 }
 
@@ -182,6 +190,88 @@ function generateSidebar() {
   document.body.insertBefore(sidebarWrapper, document.body.firstChild)
 }
 
+// Установка активного элемента в TOC
+function setActiveTocItem(headerId) {
+  if (activeHeaderId === headerId) {
+    return // Уже активен
+  }
+
+  // Удалить активный класс со всех элементов
+  const allTocItems = sidebarWrapper.querySelectorAll(".toc li")
+  allTocItems.forEach(item => item.classList.remove("active"))
+
+  // Добавить активный класс к соответствующему элементу
+  const activeTocLink = sidebarWrapper.querySelector(`a[href="#${headerId}"]`)
+  if (activeTocLink) {
+    const activeTocItem = activeTocLink.parentElement
+    activeTocItem.classList.add("active")
+
+    // Прокрутка TOC, чтобы активный элемент был видимым
+    activeTocItem.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    })
+
+    activeHeaderId = headerId
+  }
+}
+
+// Инициализация наблюдателя заголовков
+function initHeadersObserver() {
+  const headers = markdownBody.querySelectorAll("h1, h2, h3, h4, h5, h6")
+  if (headers.length === 0) {
+    return
+  }
+
+  // Настройка IntersectionObserver
+  const observerOptions = {
+    root: null, // viewport
+    rootMargin: "-20% 0px -70% 0px", // Триггер когда заголовок в верхней трети viewport
+    threshold: 0
+  }
+
+  // Создание observer
+  headersObserver = new IntersectionObserver((entries) => {
+    // Собрать все видимые заголовки
+    const visibleHeaders = []
+
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visibleHeaders.push({
+          id: entry.target.id,
+          top: entry.boundingClientRect.top
+        })
+      }
+    })
+
+    // Если есть видимые заголовки, выбрать самый верхний
+    if (visibleHeaders.length > 0) {
+      visibleHeaders.sort((a, b) => a.top - b.top)
+      setActiveTocItem(visibleHeaders[0].id)
+    }
+  }, observerOptions)
+
+  // Наблюдение за всеми заголовками
+  headers.forEach(header => {
+    headersObserver.observe(header)
+  })
+}
+
+// Остановка наблюдателя заголовков
+function stopHeadersObserver() {
+  if (headersObserver) {
+    headersObserver.disconnect()
+    headersObserver = null
+    activeHeaderId = null
+
+    // Удалить активные классы
+    if (sidebarWrapper) {
+      const allTocItems = sidebarWrapper.querySelectorAll(".toc li")
+      allTocItems.forEach(item => item.classList.remove("active"))
+    }
+  }
+}
+
 function start() {
   // Построение кнопки переключения статуса панели оглавления
   const sidebarIsHidden = getLocalStorage(sidebarStatusKey) === "hidden"
@@ -206,6 +296,9 @@ function start() {
 
   // Построение панели оглавления
   generateSidebar()
+
+  // Инициализация наблюдателя заголовков
+  initHeadersObserver()
 }
 
 // Проверка статуса загрузки DOM
