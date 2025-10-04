@@ -301,31 +301,65 @@ function initHeadersObserver() {
     return
   }
 
-  // Configure IntersectionObserver
+  // Configure IntersectionObserver - observe ALL headers in viewport
   const observerOptions = {
     root: null, // viewport
-    rootMargin: "-20% 0px -70% 0px", // Trigger when header is in upper third of viewport
+    rootMargin: "0px", // Observe entire viewport
     threshold: 0
   }
 
   // Create observer
   headersObserver = new IntersectionObserver((entries) => {
-    // Collect all visible headers
-    const visibleHeaders = []
+    // Get viewport height for percentage calculations
+    const viewportHeight = window.innerHeight
+
+    // Define reading zone (top 20-40% of viewport - natural reading position)
+    const readingZoneTop = viewportHeight * 0.2
+    const readingZoneBottom = viewportHeight * 0.4
+
+    // Collect headers that are actually in the reading zone
+    const headersInReadingZone = []
 
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        visibleHeaders.push({
-          id: entry.target.id,
-          top: entry.boundingClientRect.top
-        })
+        const headerTop = entry.boundingClientRect.top
+        const headerBottom = entry.boundingClientRect.bottom
+
+        // Check if header is in or crossing through the reading zone
+        if (headerTop <= readingZoneBottom && headerBottom >= readingZoneTop) {
+          headersInReadingZone.push({
+            id: entry.target.id,
+            top: headerTop,
+            distanceFromReadingCenter: Math.abs(headerTop - (readingZoneTop + readingZoneBottom) / 2)
+          })
+        }
       }
     })
 
-    // If there are visible headers, select the topmost one
-    if (visibleHeaders.length > 0) {
-      visibleHeaders.sort((a, b) => a.top - b.top)
-      setActiveTocItem(visibleHeaders[0].id)
+    // If headers are in reading zone, pick the one closest to center of reading zone
+    if (headersInReadingZone.length > 0) {
+      headersInReadingZone.sort((a, b) => a.distanceFromReadingCenter - b.distanceFromReadingCenter)
+      setActiveTocItem(headersInReadingZone[0].id)
+    } else {
+      // Fallback: If no headers in reading zone, find the last header that passed above it
+      const allVisibleHeaders = []
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const headerTop = entry.boundingClientRect.top
+          if (headerTop < readingZoneTop) {
+            allVisibleHeaders.push({
+              id: entry.target.id,
+              top: headerTop
+            })
+          }
+        }
+      })
+
+      // Pick the header closest to (but above) the reading zone
+      if (allVisibleHeaders.length > 0) {
+        allVisibleHeaders.sort((a, b) => b.top - a.top) // Sort descending (bottom to top)
+        setActiveTocItem(allVisibleHeaders[0].id)
+      }
     }
   }, observerOptions)
 
