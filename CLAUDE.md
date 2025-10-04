@@ -68,5 +68,9 @@ Uses Mocha test framework (@vscode/test-electron for VSCode extension testing)
 
 ## Localization
 
-Currently hardcoded in Russian:
-- `sidebarHeaderText`, `headersNotFoundText` - UI text constants at top of `md-toc-sidebar.js`
+Supports English, Russian, and Chinese (Simplified):
+- Translations defined in `translations` object in `md-toc-sidebar.js`
+- Auto-detects browser language via `navigator.language`
+- Can be manually overridden by setting `localStorage.setItem("toc-sidebar-language", "en"|"ru"|"zh")`
+- Defaults to English if browser language is not supported
+- Localized strings: sidebar header, empty state message, LocalStorage error messages

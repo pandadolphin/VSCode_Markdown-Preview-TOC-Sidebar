@@ -10,6 +10,25 @@ The extension injects a JavaScript file into the markdown preview page that coll
 
 VSCode's built-in "Outline" view is not configured to work with the Webview API used by Markdown Preview.
 
+## Features
+
+- **Auto Table of Contents**: Automatically generates a navigable sidebar from document headers (h1-h6)
+- **Responsive Design**: Adapts to different screen sizes with a breakpoint at 1366px
+- **Persistent State**: Remembers sidebar visibility preference in LocalStorage
+- **Multi-language Support**: Automatically detects browser language (English, Russian, Chinese)
+
+## Language Support
+
+The extension automatically detects your browser language and supports:
+- **English** (en)
+- **Русский** (ru) - Russian
+- **简体中文** (zh) - Simplified Chinese
+
+To manually set the language, open browser console in markdown preview and run:
+```javascript
+localStorage.setItem("toc-sidebar-language", "en") // or "ru" or "zh"
+```
+
 ## Note
 
 The sidebar visibility state is stored in LocalStorage. Depending on future VSCode Webview implementation changes, this setting may become disabled.

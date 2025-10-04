@@ -1,19 +1,56 @@
 let markdownBody = null
 let sidebarWrapper = null
 let sidebarStatusKey = "toc-sidebar-visibility"
+let languageKey = "toc-sidebar-language"
 
-// Переменные с текстом для пользователя
-const sidebarHeaderText = "Содержание"
-const headersNotFoundText = "Здесь будут отображаться заголовки вашего документа"
-const setLocalStorageErrorText = "LocalStorage: Ошибка сохранения данных"
-const getLocalStorageErrorText = "LocalStorage: Ошибка получения данных"
+// Localization strings
+const translations = {
+  en: {
+    sidebarHeader: "Table of Contents",
+    headersNotFound: "Document headers will be displayed here",
+    setLocalStorageError: "LocalStorage: Error saving data",
+    getLocalStorageError: "LocalStorage: Error retrieving data"
+  },
+  ru: {
+    sidebarHeader: "Содержание",
+    headersNotFound: "Здесь будут отображаться заголовки вашего документа",
+    setLocalStorageError: "LocalStorage: Ошибка сохранения данных",
+    getLocalStorageError: "LocalStorage: Ошибка получения данных"
+  },
+  zh: {
+    sidebarHeader: "目录",
+    headersNotFound: "文档标题将显示在这里",
+    setLocalStorageError: "LocalStorage: 保存数据时出错",
+    getLocalStorageError: "LocalStorage: 获取数据时出错"
+  }
+}
+
+// Detect and get current language
+function getLanguage() {
+  // Check localStorage for manual override
+  const savedLang = localStorage.getItem(languageKey)
+  if (savedLang && translations[savedLang]) {
+    return savedLang
+  }
+
+  // Detect browser language
+  const browserLang = navigator.language || navigator.userLanguage
+  const langCode = browserLang.toLowerCase().split(/[-_]/)[0]
+
+  // Return supported language or default to English
+  return translations[langCode] ? langCode : "en"
+}
+
+// Get localized text
+const currentLang = getLanguage()
+const i18n = translations[currentLang]
 
 // Утилиты
 function setLocalStorage(key, value) {
   try {
     localStorage.setItem(key, value)
   } catch {
-    console.log(setLocalStorageErrorText)
+    console.log(i18n.setLocalStorageError)
   }
 }
 
@@ -22,7 +59,7 @@ function getLocalStorage(key) {
   try {
     localStorageItem = localStorage.getItem(key)
   } catch {
-    console.log(getLocalStorageErrorText)
+    console.log(i18n.getLocalStorageError)
   }
   return localStorageItem
 }
@@ -60,7 +97,7 @@ function generateToc() {
   toc.className = "toc"
 
   const sidebarHeaderTitle = document.createElement("h1")
-  sidebarHeaderTitle.textContent = sidebarHeaderText
+  sidebarHeaderTitle.textContent = i18n.sidebarHeader
   toc.appendChild(sidebarHeaderTitle)
 
   // Получение селекторов заголовков
@@ -70,7 +107,7 @@ function generateToc() {
   // Если заголовков нет, вывод сообщения пользователю о данном событии и выход из функции
   if (headers.length === 0) {
     const headersNotFoundElement = document.createElement("p")
-    headersNotFoundElement.textContent = headersNotFoundText
+    headersNotFoundElement.textContent = i18n.headersNotFound
     toc.appendChild(headersNotFoundElement)
     return toc
   }
