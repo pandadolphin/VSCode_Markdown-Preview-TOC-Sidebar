@@ -74,17 +74,14 @@ function toggleSidebar(btnToggleSidebar) {
     if (sidebarStatus) {
       markdownBody.classList.add("toc-max-width-limit")
       sidebarWrapper.classList.remove("toc-sidebar-hidden")
-      btnToggleSidebar.classList.remove("toc-sm-position-absolute")
       setLocalStorage(sidebarStatusKey, "visible")
     } else {
       markdownBody.classList.remove("toc-max-width-limit")
       sidebarWrapper.classList.add("toc-sidebar-hidden")
-      btnToggleSidebar.classList.add("toc-sm-position-absolute")
       setLocalStorage(sidebarStatusKey, "hidden")
     }
   } else {
     generateSidebar()
-    btnToggleSidebar.classList.remove("toc-sm-position-absolute")
     setLocalStorage(sidebarStatusKey, "visible")
   }
 }
@@ -201,9 +198,8 @@ function start() {
     }
   })
 
-  // Если панель оглавления  должна быть скрыта, выход
+  // Если панель оглавления должна быть скрыта, выход
   if (sidebarIsHidden) {
-    btnToggleSidebar.classList.add("toc-sm-position-absolute")
     return
   }
 
