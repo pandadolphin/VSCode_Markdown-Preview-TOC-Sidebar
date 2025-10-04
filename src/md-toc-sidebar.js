@@ -242,17 +242,14 @@ function setActiveTocItem(headerId, force = false) {
     return
   }
 
-  // Remove active class from previously active item (if exists) - fastest approach
-  if (activeItemElement) {
-    activeItemElement.classList.remove("active")
-    activeItemElement = null
-  }
-
-  // Also do a full cleanup as safety net - only query for items that actually have active class
-  const activeItems = sidebarWrapper.querySelectorAll(".toc li.active")
-  if (activeItems.length > 0) {
-    activeItems.forEach(item => item.classList.remove("active"))
-  }
+  // ALWAYS remove active class from ALL items - simple and reliable
+  // This ensures no stale highlights remain
+  const allTocItems = sidebarWrapper.querySelectorAll(".toc li")
+  allTocItems.forEach(item => {
+    if (item.classList.contains("active")) {
+      item.classList.remove("active")
+    }
+  })
 
   // Add active class to corresponding item
   const activeTocLink = sidebarWrapper.querySelector(`a[href="#${headerId}"]`)
@@ -260,7 +257,7 @@ function setActiveTocItem(headerId, force = false) {
     const activeTocItem = activeTocLink.parentElement
     activeTocItem.classList.add("active")
 
-    // Store reference to active element for fast cleanup next time
+    // Store reference to active element
     activeItemElement = activeTocItem
 
     // Scroll TOC to keep active item visible
@@ -322,10 +319,14 @@ function stopHeadersObserver() {
     activeHeaderId = null
     activeItemElement = null
 
-    // Remove active classes
+    // Remove ALL active classes
     if (sidebarWrapper) {
-      const activeItems = sidebarWrapper.querySelectorAll(".toc li.active")
-      activeItems.forEach(item => item.classList.remove("active"))
+      const allTocItems = sidebarWrapper.querySelectorAll(".toc li")
+      allTocItems.forEach(item => {
+        if (item.classList.contains("active")) {
+          item.classList.remove("active")
+        }
+      })
     }
   }
 }
