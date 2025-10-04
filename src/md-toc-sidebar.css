@@ -129,14 +129,16 @@ a:focus {
 }
 
 .toc h1 {
-  padding-bottom: var(--markdown-h-padding-bottom);
+  padding-top: 12px;
+  padding-bottom: 12px;
   padding-left: 5px;
   font-size: var(--toc-sidebar-h1);
+  margin-bottom: 8px;
 }
 
 .toc ul {
   margin-bottom: 0;
-  padding-left: 10px;
+  padding-left: 16px;
   list-style-type: none;
 }
 
@@ -146,6 +148,17 @@ a:focus {
 
 .toc ul li {
   padding-left: 0;
+  line-height: 1.6;
+}
+
+/* Add spacing between top-level items */
+.toc > ul > li {
+  margin-bottom: 8px;
+}
+
+/* Reduce spacing for nested items */
+.toc ul ul li {
+  margin-bottom: 2px;
 }
 
 .toc ul li:not(:has(ul)):before {
