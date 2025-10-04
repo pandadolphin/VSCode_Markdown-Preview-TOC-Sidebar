@@ -189,6 +189,36 @@ a:focus {
   opacity: 0.7;
 }
 
+/* Hover and Focus States */
+.toc ul li {
+  border-radius: 3px;
+  transition: background-color 150ms ease-in-out;
+}
+
+.toc ul li:hover,
+.toc ul li:has(a:focus) {
+  background-color: var(--vscode-list-hoverBackground);
+}
+
+.toc ul li a {
+  display: block;
+  padding: 2px 4px;
+  text-decoration: none;
+  transition: color 150ms ease-in-out;
+  cursor: pointer;
+}
+
+.toc ul li:hover a,
+.toc ul li a:focus {
+  color: var(--vscode-list-hoverForeground);
+  outline: none;
+}
+
+.toc ul li a:focus {
+  outline: 1px solid var(--vscode-focusBorder);
+  outline-offset: -1px;
+}
+
 /* Утилиты */
 .toc-sidebar-hidden {
   display: none !important;
