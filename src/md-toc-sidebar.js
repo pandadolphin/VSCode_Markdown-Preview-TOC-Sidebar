@@ -317,22 +317,34 @@ function initHeadersObserver() {
     const readingZoneTop = viewportHeight * 0.2
     const readingZoneBottom = viewportHeight * 0.4
 
-    // Collect headers that are actually in the reading zone
+    // Check ALL headers in the document (not just entries), since entries only
+    // contains headers that changed intersection state, not all visible headers
     const headersInReadingZone = []
+    const headersAboveReadingZone = []
 
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const headerTop = entry.boundingClientRect.top
-        const headerBottom = entry.boundingClientRect.bottom
+    headers.forEach(header => {
+      const rect = header.getBoundingClientRect()
+      const headerTop = rect.top
+      const headerBottom = rect.bottom
 
-        // Check if header is in or crossing through the reading zone
-        if (headerTop <= readingZoneBottom && headerBottom >= readingZoneTop) {
-          headersInReadingZone.push({
-            id: entry.target.id,
-            top: headerTop,
-            distanceFromReadingCenter: Math.abs(headerTop - (readingZoneTop + readingZoneBottom) / 2)
-          })
-        }
+      // Skip headers not in viewport
+      if (headerBottom < 0 || headerTop > viewportHeight) {
+        return
+      }
+
+      // Check if header is in or crossing through the reading zone
+      if (headerTop <= readingZoneBottom && headerBottom >= readingZoneTop) {
+        headersInReadingZone.push({
+          id: header.id,
+          top: headerTop,
+          distanceFromReadingCenter: Math.abs(headerTop - (readingZoneTop + readingZoneBottom) / 2)
+        })
+      } else if (headerTop < readingZoneTop) {
+        // Header is above the reading zone
+        headersAboveReadingZone.push({
+          id: header.id,
+          top: headerTop
+        })
       }
     })
 
@@ -340,26 +352,10 @@ function initHeadersObserver() {
     if (headersInReadingZone.length > 0) {
       headersInReadingZone.sort((a, b) => a.distanceFromReadingCenter - b.distanceFromReadingCenter)
       setActiveTocItem(headersInReadingZone[0].id)
-    } else {
-      // Fallback: If no headers in reading zone, find the last header that passed above it
-      const allVisibleHeaders = []
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const headerTop = entry.boundingClientRect.top
-          if (headerTop < readingZoneTop) {
-            allVisibleHeaders.push({
-              id: entry.target.id,
-              top: headerTop
-            })
-          }
-        }
-      })
-
-      // Pick the header closest to (but above) the reading zone
-      if (allVisibleHeaders.length > 0) {
-        allVisibleHeaders.sort((a, b) => b.top - a.top) // Sort descending (bottom to top)
-        setActiveTocItem(allVisibleHeaders[0].id)
-      }
+    } else if (headersAboveReadingZone.length > 0) {
+      // Fallback: Pick the header closest to (but above) the reading zone
+      headersAboveReadingZone.sort((a, b) => b.top - a.top) // Sort descending (bottom to top)
+      setActiveTocItem(headersAboveReadingZone[0].id)
     }
   }, observerOptions)
 
